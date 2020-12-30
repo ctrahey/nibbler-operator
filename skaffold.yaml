@@ -1,0 +1,13 @@
+apiVersion: skaffold/v2beta6
+kind: Config
+metadata:
+  name: nibbler-operator
+build:
+  local: {}
+  artifacts:
+  - image: ctrahey/nibbler-operator
+    context: .
+deploy:
+  kustomize:
+    paths:
+    - .

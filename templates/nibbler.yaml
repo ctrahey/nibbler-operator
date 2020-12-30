@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{name}-nibbler"
+  labels:
+    app: "{name}-nibbler"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{name}-nibbler"
+  template:
+    metadata:
+      labels:
+        app: "{name}-nibbler"
+    spec:
+      initContainers:
+      - name: wait
+        image: willwill/wait-for-it
+        args:
+        - '-t'
+        - '300'
+        - '{name}-vendor:80'
+      containers:
+      - name: worker
+        image: "{worker_image}"
+        imagePullPolicy: Always
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "true"
+      - name: nibbler
+        image: ctrahey/nibbler
+        imagePullPolicy: Always
+        env:
+        - name: VENDOR_URL
+          value: "{name}-vendor"
+        - name: PYTHONUNBUFFERED
+          value: "true"

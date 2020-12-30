@@ -1,0 +1,7 @@
+namespace: nibbler-operator
+bases:
+- db
+resources:
+- crd.yaml
+- rbac.yaml
+- deployment.yaml

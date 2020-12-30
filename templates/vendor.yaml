@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{name}-vendor"
+  labels:
+    app: "{name}-vendor"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{name}-vendor"
+  template:
+    metadata:
+      labels:
+        app: "{name}-vendor"
+    spec:
+      containers:
+      - name: vendor
+        image: ctrahey/nibble-vendor
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "true"
+        - name: DB_HOST
+          value: mysql.nibbler-operator.svc.cluster.local
+        - name: DB_DATABASE
+          value: nibbles
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: nibbler-db-user
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nibbler-db-user
+              key: password

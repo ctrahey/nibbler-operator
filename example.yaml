@@ -1,0 +1,23 @@
+apiVersion: trahey.us/v1
+kind: Nibbler
+metadata:
+  name: statics-init-symbols
+  namespace: data-services
+spec:
+  image: docker-registry.trahey.us/offline-data-services/update-statics/worker
+  env:
+  - name: DB_USER
+    valueFrom:
+      secretKeyRef:
+        name: mysql-history-db-user
+        key: username
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: mysql-history-db-user
+        key: password
+  - name: POLYGON_KEY
+    valueFrom:
+      secretKeyRef:
+        name: polygon-key
+        key: key

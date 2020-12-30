@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nibbler-operator
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      application: nibbler-operator
+  template:
+    metadata:
+      labels:
+        application: nibbler-operator
+    spec:
+      serviceAccountName: nibbler-operator
+      imagePullSecrets:
+      - name: docker-pull-secret
+      containers:
+      - name: nibbler-operator
+        image: ctrahey/nibbler-operator
+        env:
+        - name: MYSQL_DATABASE
+          value: nibbles
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-user
+              key: .mysql_user.txt
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-db-user
+              key: .mysql_pass.txt
